@@ -17,3 +17,5 @@ export const config = {
   JWT_KEY: process.env.JWT_KEY,
   JWT_TTL: process.env.JWT_TTL
 }
+
+export * from './db.config'
