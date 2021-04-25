@@ -11,8 +11,8 @@ export const config = {
   DBURL: process.env.DBURL,
   DBNAME: process.env.DBNAME,
   __prod__: process.env.NODE_ENV === 'production',
-  MONGOPASS: process.env.MONGOPASS,
-  MONGOUSER: process.env.MONGOUSER,
+  PGPASS: process.env.PGPASS,
+  PGUSER: process.env.PGUSER,
   CORS: process.env.CORS,
   JWT_KEY: process.env.JWT_KEY,
   JWT_TTL: process.env.JWT_TTL

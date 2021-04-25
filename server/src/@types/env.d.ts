@@ -10,8 +10,8 @@ declare namespace NodeJS {
     DBURL: string
     DBNAME: string
     NODE_ENV: string
-    MONGOPASS: string
-    MONGOUSER: string
+    PGPASS: string
+    PGUSER: string
     CORS: string // http://localhost:3000
     JWT_KEY: string // -fdsfdsf
     JWT_TTL: string // 365d
