@@ -34,7 +34,7 @@ services:
   #
   api:
     build: 
-      context: ../api
+      context: ../server
       dockerfile: Dockerfile.dev
     restart: always
     stdin_open: true
@@ -42,23 +42,17 @@ services:
       - pg
     volumes: 
       - /app/node_modules 
-      - ../api:/app
+      - ../server:/app
     environment:
       - PORT=5002
       - DBURL=pg
       - DBNAME=devrefvanillanodesql
       - NODE_ENV=development
       - PGPASS=secret
-      - PGUSERUSER=root
+      - PGUSER=root
       - CORS=http://localhost:3000
       - JWT_KEY=yhgewy5ehuyrhbe56y
       - JWT_TTL=365d
-      - DB=postgres
-      - DBNAME=devrefauth
-      - DB_DOCKER=pg
-      - PGUSER=root
-      - PASSWORD=secret
-      - DB_URL=dburl
     ports: 
       - 5002:5002
 
