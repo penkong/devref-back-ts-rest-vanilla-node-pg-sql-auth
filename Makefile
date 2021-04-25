@@ -29,3 +29,6 @@ composeup:
 
 composedown:
 	docker-compose -f docker-compose.dev.yaml down
+
+removeAllVolumes:
+	docker volume rm $(docker volume ls -q)
