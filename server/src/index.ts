@@ -1,12 +1,22 @@
-import { pool } from './pool.db'
-import { dbConfig } from './config'
+import { app } from './app'
+import { pool } from './service'
+import { config, dbConfig } from './config'
 
-pool
-  .connect(dbConfig)
-  .then(() => {
+async function main() {
+  try {
+    await pool.connect(dbConfig)
+
+    pool.query('select 1 + 1', [])
+
     console.log('conntect to db')
-    console.log(dbConfig)
-  })
-  .catch(err => {
+
+    if (config.PORT)
+      app.listen(parseInt(config.PORT), () =>
+        console.log(`Server running on port ${config.PORT}`)
+      )
+  } catch (err) {
     console.log(err.message)
-  })
+  }
+}
+
+main()

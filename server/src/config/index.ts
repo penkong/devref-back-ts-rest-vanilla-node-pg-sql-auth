@@ -14,6 +14,7 @@ export const config = {
   PGPASS: process.env.PGPASS,
   PGUSER: process.env.PGUSER,
   CORS: process.env.CORS,
+  DOMAIN: process.env.DOMAIN,
   JWT_KEY: process.env.JWT_KEY,
   JWT_TTL: process.env.JWT_TTL
 }
