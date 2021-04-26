@@ -1,1 +1,4 @@
-# s
+# contain all meta informatrion about chart
+# name , version dependencies
+# chart folder contain chart dependencies ,
+#  it this chart depend upon other charts other store here

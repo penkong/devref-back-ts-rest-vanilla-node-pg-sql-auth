@@ -49,9 +49,12 @@ spec:
           ports:
             - containerPort: 5432
 
+          # volume runner in pod
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: pgvol
+
+      # volume register
       volumes:
         - name: pgvol
           persistentVolumeClaim:
