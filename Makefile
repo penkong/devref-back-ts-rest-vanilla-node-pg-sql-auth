@@ -22,13 +22,23 @@ createdb:
 
 
 apibuilddev:
-	cd api && docker build -t penkong/vanillapg -f Dockerfile.dev . 
+	cd server && docker build -t penkong/vanillanodepg -f Dockerfile.dev . 
+
+apipushdevdocker:
+	docker push penkong/vanillanodepg
 
 composeup:
-	docker-compose -f docker-compose.dev.yaml up -d --build
+	cd server && docker-compose -f docker-compose.dev.yaml up -d --build
 
 composedown:
-	docker-compose -f docker-compose.dev.yaml down
+	cd server && docker-compose -f docker-compose.dev.yaml down
 
 removeAllVolumes:
 	docker volume rm $(docker volume ls -q)
+
+# ka == kubectl apply -f 
+kuberup:
+	cd k8s && kubectl apply -f secrets.k8s.yaml && kubectl apply -f confmap.k8s.yaml && kubectl apply -f .
+
+kuberdown:
+	cd k8s && kubectl delete -f .
