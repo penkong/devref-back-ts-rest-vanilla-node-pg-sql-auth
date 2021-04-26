@@ -1,6 +1,7 @@
 import { IncomingMessage } from 'http'
 
 import { config } from '../config'
+import { validRoutes } from '../util'
 
 export class UrlRefiner {
   //
@@ -13,15 +14,15 @@ export class UrlRefiner {
   }
 
   static checker(url: URL, req: IncomingMessage): boolean {
-    if (url.pathname === '/favicon.ico') return false
-
     const methods = ['GET', 'POST']
 
     if (!methods.includes(req.method!)) return false
 
-    const pathname = url.pathname.split('/').splice(1).slice(0, 3).join('/')
+    if (url.pathname === '/favicon.ico') return false
 
-    if (pathname != 'api/v1/auth') return false
+    const r = req.method + url.pathname
+
+    if (!validRoutes.includes(r)) return false
 
     return true
   }
