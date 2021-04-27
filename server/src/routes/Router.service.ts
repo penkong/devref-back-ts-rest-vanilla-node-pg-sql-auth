@@ -4,15 +4,15 @@ import { validRoutes } from '../util'
 import { register, login, currentUser, logout } from '../controller'
 
 export class Router {
-  static dispatch(url: URL, req: IncomingMessage, res: ServerResponse) {
+  static async dispatch(url: URL, req: IncomingMessage, res: ServerResponse) {
     const r = req.method + url.pathname
 
-    if (r == validRoutes[0]) register(req, res)
+    if (r == validRoutes[0]) return await register(url, req, res)
 
-    if (r == validRoutes[1]) login(req, res)
+    if (r == validRoutes[1]) return await login(url, req, res)
 
-    if (r == validRoutes[2]) currentUser(req, res)
+    if (r == validRoutes[2]) return await currentUser(url, req, res)
 
-    if (r == validRoutes[3]) logout(req, res)
+    if (r == validRoutes[3]) return await logout(url, req, res)
   }
 }
