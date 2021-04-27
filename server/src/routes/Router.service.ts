@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
 import { validRoutes } from '../util'
+import { alreadyIn } from '../middleware'
 import { register, login, currentUser, logout } from '../controller'
-import { alreadyIn } from '../util/alreadyIn.util'
 
 export class Router {
   static async dispatch(url: URL, req: IncomingMessage, res: ServerResponse) {
@@ -17,9 +17,8 @@ export class Router {
       return await login(url, req, res)
     }
 
-    if (r == validRoutes[2]) {
-      return await currentUser(url, req, res)
-    }
+    if (r == validRoutes[2]) return await currentUser(url, req, res)
+
     if (r == validRoutes[3]) return await logout(url, req, res)
   }
 }

@@ -3,6 +3,12 @@ export interface IRegisterInfo {
   password: string
 }
 
+export interface ICurrentUser {
+  id: string
+  email: string
+  iat: number
+}
+
 export interface IUser {
   user_id: string
   email: string

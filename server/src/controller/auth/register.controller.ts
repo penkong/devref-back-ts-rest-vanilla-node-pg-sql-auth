@@ -45,7 +45,12 @@ export const register = async (
       JWT_KEY!
     )
 
-    res.setHeader('Set-cookie', `vanillajwt=${userJwt}`)
+    res.setHeader(
+      'Set-cookie',
+      `vanillajwt=${userJwt};path=/;expires=${new Date(
+        new Date().getTime() + 86409000
+      ).toUTCString()}`
+    )
     res.writeHead(201, { 'Content-Type': 'application/json' })
     res.write(JSON.stringify([userRefine(user, userJwt)]))
     res.end()
