@@ -5,9 +5,6 @@ import { config, dbConfig } from './config'
 async function main() {
   try {
     await pool.connect(dbConfig)
-
-    pool.query('select 1 + 1', [])
-
     console.log('conntect to db')
 
     if (config.PORT)

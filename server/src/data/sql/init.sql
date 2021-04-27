@@ -1,8 +1,3 @@
--- CREATE USER root;
-CREATE DATABASE devrefvanillanodesql;
---          -------------------------
--- GRANT ALL PRIVILEGES ON DATABASE devref-ts-express-rest-pg-auth TO root;
-
 CREATE TABLE IF NOT EXISTS users (
   "user_id" BIGSERIAL PRIMARY KEY,
   "email" varchar(75) UNIQUE NOT NULL,

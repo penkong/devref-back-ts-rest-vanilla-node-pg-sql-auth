@@ -1,14 +1,24 @@
 /*
  ** Description :
  */
-// import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 import { IncomingMessage, ServerResponse } from 'http'
 
-// import { config } from '../../config/'
-// import { PasswordService } from '../../service'
+import { getBody } from '../../util'
+import { config } from '../../config/'
+import { UserRepository } from '../../data'
+import { PasswordService } from '../../service'
+// import { BadReqErr } from 'error/BadReqErr.error'
 
-// const { JWT_KEY } = config
+// ---
+
+const { JWT_KEY } = config
+
+interface IRegisterInfo {
+  email: string
+  password: string
+}
 
 // ---
 
@@ -17,37 +27,32 @@ export const register = async (
   req: IncomingMessage,
   res: ServerResponse
 ) => {
-  let body = ''
+  // get body
+  const { email, password } = (await getBody(req)) as IRegisterInfo
 
-  req.on('data', chunk => {
-    body += chunk
-  })
+  await UserRepository.getByEmail(email)
+  // if (existingUser) {
+  //   throw new BadReqErr('Email in use')
+  // }
 
-  req.on('end', () => {
-    let postBody = JSON.parse(body.toString())
-    console.log(postBody)
-    let response = {
-      text: 'Post Request Value is  ' + postBody.email
-    }
+  const hashed = await PasswordService.toHash(password)
+  const user = await UserRepository.create({ email, password: hashed })
 
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.write(JSON.stringify(response))
-    res.end()
-  })
-
-  // res.end()
+  console.log(email, password)
+  res.end()
 
   // Generate JWT
-  // const userJwt = jwt.sign(
-  //   {
-  //     id: user.id,
-  //     email: user.email
-  //   },
-  //   JWT_KEY!
-  // )
+  const userJwt = jwt.sign(
+    {
+      id: user.id,
+      email: user.email
+    },
+    JWT_KEY!
+  )
+  console.log(userJwt)
+  // Store it on session object
 
-  // // Store it on session object
   // req.session = {
   //   jwt: userJwt
+  // }
 }
