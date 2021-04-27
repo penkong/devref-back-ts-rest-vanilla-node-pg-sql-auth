@@ -17,8 +17,6 @@ export const app = http.createServer(
 
     if (!isOk) return res.end()
 
-    const r = req.method + url.pathname
-
-    Router.dispatch(r, req, res)
+    Router.dispatch(url, req, res)
   }
 )

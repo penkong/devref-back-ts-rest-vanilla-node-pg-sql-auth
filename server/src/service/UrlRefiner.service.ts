@@ -1,7 +1,9 @@
 import { IncomingMessage } from 'http'
 
 import { config } from '../config'
-import { validRoutes } from '../util'
+import { validMethods, validRoutes } from '../util'
+
+// ---
 
 export class UrlRefiner {
   //
@@ -14,9 +16,7 @@ export class UrlRefiner {
   }
 
   static checker(url: URL, req: IncomingMessage): boolean {
-    const methods = ['GET', 'POST']
-
-    if (!methods.includes(req.method!)) return false
+    if (!validMethods.includes(req.method!)) return false
 
     if (url.pathname === '/favicon.ico') return false
 
