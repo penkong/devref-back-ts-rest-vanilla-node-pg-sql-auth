@@ -1,24 +1,21 @@
 /*
  ** Description :
  */
+
 import jwt from 'jsonwebtoken'
 
 import { IncomingMessage, ServerResponse } from 'http'
 
-import { getBody } from '../../util'
 import { config } from '../../config/'
+import { BadReqErr } from '../../error'
 import { UserRepository } from '../../data'
+import { IRegisterInfo, IUser } from '../../@types'
 import { PasswordService } from '../../service'
-// import { BadReqErr } from 'error/BadReqErr.error'
+import { getBody, userRefine } from '../../util'
 
 // ---
 
 const { JWT_KEY } = config
-
-interface IRegisterInfo {
-  email: string
-  password: string
-}
 
 // ---
 
@@ -27,32 +24,36 @@ export const register = async (
   req: IncomingMessage,
   res: ServerResponse
 ) => {
-  // get body
-  const { email, password } = (await getBody(req)) as IRegisterInfo
+  try {
+    // get body from buffer to string
+    const { email, password } = (await getBody(req)) as IRegisterInfo
 
-  await UserRepository.getByEmail(email)
-  // if (existingUser) {
-  //   throw new BadReqErr('Email in use')
-  // }
+    const existingUser: IUser = await UserRepository.getByEmail(email)
 
-  const hashed = await PasswordService.toHash(password)
-  const user = await UserRepository.create({ email, password: hashed })
+    if (existingUser) throw new BadReqErr('Email in use')
 
-  console.log(email, password)
-  res.end()
+    const hashed = await PasswordService.toHash(password)
 
-  // Generate JWT
-  const userJwt = jwt.sign(
-    {
-      id: user.id,
-      email: user.email
-    },
-    JWT_KEY!
-  )
-  console.log(userJwt)
-  // Store it on session object
+    const user: IUser = await UserRepository.create({ email, password: hashed })
 
-  // req.session = {
-  //   jwt: userJwt
-  // }
+    // Generate JWT
+    const userJwt = jwt.sign(
+      {
+        id: user.user_id,
+        email: user.email
+      },
+      JWT_KEY!
+    )
+
+    res.setHeader('Set-cookie', `vanillajwt=${userJwt}`)
+    res.writeHead(201, { 'Content-Type': 'application/json' })
+    res.write(JSON.stringify([userRefine(user, userJwt)]))
+    res.end()
+    return
+  } catch (error) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.write(JSON.stringify([{ message: error.message }]))
+    res.end()
+    return
+  }
 }
