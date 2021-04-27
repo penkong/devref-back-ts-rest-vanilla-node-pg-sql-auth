@@ -1,4 +1,17 @@
+import jwt from 'jsonwebtoken'
+
 import { IncomingMessage, ServerResponse } from 'http'
+
+import { config } from '../../config'
+import { BadReqErr } from '../../error'
+import { UserRepository } from '../../data'
+import { PasswordService } from '../../service'
+import { getBody, userRefine } from '../../util'
+import { IRegisterInfo, IUser } from '../../@types'
+
+// ---
+
+const { JWT_KEY } = config
 
 export async function login(
   _url: URL,
@@ -9,13 +22,13 @@ export async function login(
     // get body from buffer to string
     const { email, password } = (await getBody(req)) as IRegisterInfo
 
-    const existingUser: IUser = await UserRepository.getByEmail(email)
+    const user: IUser = await UserRepository.getByEmail(email)
 
-    if (existingUser) throw new BadReqErr('Email in use')
+    if (!user) throw new BadReqErr('Wrong Inputs!')
 
-    const hashed = await PasswordService.toHash(password)
+    const isMatched = await PasswordService.compare(user.hashed_pass, password)
 
-    const user: IUser = await UserRepository.create({ email, password: hashed })
+    if (!isMatched) throw new BadReqErr('Invalid Creds!')
 
     // Generate JWT
     const userJwt = jwt.sign(
@@ -32,42 +45,17 @@ export async function login(
         new Date().getTime() + 86409000
       ).toUTCString()}`
     )
+
     res.writeHead(201, { 'Content-Type': 'application/json' })
     res.write(JSON.stringify([userRefine(user, userJwt)]))
     res.end()
+
     return
   } catch (error) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.write(JSON.stringify([{ message: error.message }]))
     res.end()
+
     return
   }
 }
-
-// const { email, password } = req.body
-
-// const existUser = await UserRepository.getByEmail(email)
-
-// if (!existUser) throw new BadReqErr('Invalid credentials')
-
-// const matchedPass = await PasswordService.compare(existUser.password, password)
-
-// if (!matchedPass) throw new BadReqErr('Invalid Credentials')
-
-// // Generate JWT
-// const userJwt = jwt.sign(
-//   {
-//     id: existUser.id,
-//     email: existUser.email
-//   },
-//   process.env.JWT_KEY!
-// )
-
-// // Store it on session object
-// req.session = {
-//   jwt: userJwt
-// }
-
-// console.log(req.session)
-
-// res.status(200).send([userRefine(existUser, userJwt)])

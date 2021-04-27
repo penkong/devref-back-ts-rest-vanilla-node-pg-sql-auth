@@ -30,7 +30,7 @@ export const register = async (
 
     const existingUser: IUser = await UserRepository.getByEmail(email)
 
-    if (existingUser) throw new BadReqErr('Email in use')
+    if (existingUser) throw new BadReqErr('Email in use!')
 
     const hashed = await PasswordService.toHash(password)
 

@@ -5,7 +5,6 @@ export async function logout(
   req: IncomingMessage,
   res: ServerResponse
 ) {
-  console.log(req.method)
   const cookie = req.headers.cookie?.split('=')
 
   if (cookie && cookie[0] == 'vanillajwt' && cookie[1].length > 0)
