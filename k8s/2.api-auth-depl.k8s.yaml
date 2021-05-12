@@ -16,7 +16,10 @@ spec:
     spec:
       containers:
         - name: api-auth
+          # eval $(minikube docker-env)
+          # cd to service && docker build -t penkong/vanillanodemongo .
           image: 'penkong/vanillanodepg:latest'
+          # imagePullPolicy: Never // if use local image
           imagePullPolicy: Always
           env:
             - name: PORT
