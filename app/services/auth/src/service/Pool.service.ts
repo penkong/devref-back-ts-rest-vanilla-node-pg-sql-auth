@@ -10,11 +10,11 @@ class Pool {
   }
 
   close() {
-    return this._pool!.end()
+    return this._pool.end()
   }
 
   query(sql: string | QueryArrayConfig<any[]>, params: any[]) {
-    return this._pool!.query(sql, params)
+    return this._pool.query(sql, params)
   }
 
   on(event: 'error', cb: Function) {
