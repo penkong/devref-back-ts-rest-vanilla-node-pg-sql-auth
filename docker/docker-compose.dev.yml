@@ -41,7 +41,7 @@ services:
     environment:
       - PORT=5002
       - DBURL=pg
-      - DBNAME=devrefvanillanodesql
+      - DBNAME=vanillanodepg
       - NODE_ENV=development
       - PGPASS=secret
       - PGUSER=root

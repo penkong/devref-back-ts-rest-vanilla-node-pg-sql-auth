@@ -6,7 +6,7 @@ metadata:
 data:
   port: '5003'
   dburl: pg-srv
-  dbname: devrefvanillanodesql
+  dbname: vanillanodepg
   envnode: development
   cors: http://localhost:3000
   pgadminemail: nazemi.works@gmail.com
