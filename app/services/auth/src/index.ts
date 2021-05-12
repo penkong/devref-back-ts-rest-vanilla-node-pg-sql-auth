@@ -18,9 +18,12 @@ async function main() {
       app.listen(parseInt(config.PORT), () =>
         console.log(`Server running on port ${config.PORT}`)
       )
+
+    pool.on('error', async () => await pool.end())
   } catch (err) {
     console.log(err.message)
   }
 }
 
 main()
+process.on('warning', e => console.warn(e.stack))

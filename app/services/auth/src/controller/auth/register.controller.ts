@@ -1,17 +1,36 @@
+/*
+ ** Description :
+ */
+
+import jwt from 'jsonwebtoken'
+
 import { IncomingMessage, ServerResponse } from 'http'
 
-export async function login(
+import { config } from '../../config/'
+import { BadReqErr } from '../../error'
+import { UserRepository } from '../../data'
+import { IRegisterInfo, IUser } from '../../@types'
+import { PasswordService } from '../../service'
+import { getBody, userRefine } from '../../util'
+
+// ---
+
+const { JWT_KEY } = config
+
+// ---
+
+export const register = async (
   _url: URL,
   req: IncomingMessage,
   res: ServerResponse
-) {
+) => {
   try {
     // get body from buffer to string
     const { email, password } = (await getBody(req)) as IRegisterInfo
 
     const existingUser: IUser = await UserRepository.getByEmail(email)
 
-    if (existingUser) throw new BadReqErr('Email in use')
+    if (existingUser) throw new BadReqErr('Email in use!')
 
     const hashed = await PasswordService.toHash(password)
 
@@ -43,31 +62,3 @@ export async function login(
     return
   }
 }
-
-// const { email, password } = req.body
-
-// const existUser = await UserRepository.getByEmail(email)
-
-// if (!existUser) throw new BadReqErr('Invalid credentials')
-
-// const matchedPass = await PasswordService.compare(existUser.password, password)
-
-// if (!matchedPass) throw new BadReqErr('Invalid Credentials')
-
-// // Generate JWT
-// const userJwt = jwt.sign(
-//   {
-//     id: existUser.id,
-//     email: existUser.email
-//   },
-//   process.env.JWT_KEY!
-// )
-
-// // Store it on session object
-// req.session = {
-//   jwt: userJwt
-// }
-
-// console.log(req.session)
-
-// res.status(200).send([userRefine(existUser, userJwt)])

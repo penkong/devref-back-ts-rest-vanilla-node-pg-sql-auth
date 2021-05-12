@@ -1,7 +1,7 @@
 import pg, { PoolConfig, QueryArrayConfig } from 'pg'
 
 class Pool {
-  _pool: pg.Pool | null = null
+  _pool: pg.Pool
   constructor() {}
 
   connect(options: PoolConfig) {
@@ -10,11 +10,21 @@ class Pool {
   }
 
   close() {
-    return this._pool!.end()
+    return this._pool.end()
   }
 
   query(sql: string | QueryArrayConfig<any[]>, params: any[]) {
-    return this._pool!.query(sql, params)
+    return this._pool.query(sql, params)
+  }
+
+  on(event: 'error', cb: Function) {
+    return this._pool.on(event, () => {
+      cb()
+    })
+  }
+
+  end() {
+    return this._pool.end()
   }
 }
 
